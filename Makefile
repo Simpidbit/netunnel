@@ -47,7 +47,11 @@ else ifeq ($(OS), 2)
 	EFSW_LINK_LIB = ./lib/windows/efsw_x86_64.lib
 endif
 
+# ALL_LINK_LIB 配置
 ALL_LINK_LIB = $(SIMSKT_LINK_LIB) $(EFSW_LINK_LIB)
+
+# SOURCES 配置
+SOURCES = main.cpp
 
 subm:
 	git submodule init
@@ -60,7 +64,7 @@ simskt: subm build_dir
 	$(CC) $(CCFLAGS) -c simwrap/simskt/simskt.cpp -o build/simskt.o
 
 main: simskt
-	$(CC) $(CCFLAGS) main.cpp build/simskt.o $(ALL_LINK_LIB) $(INCLUDE_DIR) -o main
+	$(CC) $(CCFLAGS) $(SOURCES) build/simskt.o $(ALL_LINK_LIB) $(INCLUDE_DIR) -o main
 
 clean:
 	rm -rf build
