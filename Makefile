@@ -55,7 +55,7 @@ SOURCES = main.cpp
 
 subm:
 	git submodule init
-	git submodule update
+	git submodule update --remote
 
 build_dir:
 	mkdir -p build
