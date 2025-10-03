@@ -65,3 +65,4 @@ main: simskt
 clean:
 	rm -rf build
 	rm -f main
+	rm -f main.exe
