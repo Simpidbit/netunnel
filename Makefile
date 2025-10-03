@@ -1,6 +1,6 @@
 CC = # 随后配置
-CCFLAGS = -std=c++14
-INCLUDE_DIR = -I simwrap/simskt -I include
+CCFLAGS = -std=c++17
+INCLUDE_DIR = -I simwrap -I include
 
 # OS == 0: Darwin
 # OS == 1: Linux
@@ -63,8 +63,11 @@ build_dir:
 simskt: subm build_dir
 	$(CC) $(CCFLAGS) -c simwrap/simskt/simskt.cpp -o build/simskt.o
 
-main: simskt
-	$(CC) $(CCFLAGS) $(SOURCES) build/simskt.o $(ALL_LINK_LIB) $(INCLUDE_DIR) -o main
+simopt: subm build_dir
+	$(CC) $(CCFLAGS) -c simwrap/simopt/simopt.cpp -o build/simopt.o
+
+main: simskt simopt
+	$(CC) $(CCFLAGS) $(SOURCES) build/*.o $(ALL_LINK_LIB) $(INCLUDE_DIR) -o main
 
 clean:
 	rm -rf build
