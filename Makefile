@@ -39,10 +39,10 @@ endif
 ifeq ($(OS), 0)	
 	# Darwin
 	EFSW_LINK_LIB = ./lib/darwin/libefsw_arm.a -framework CoreFoundation -framework CoreServices -lpthread
-else ifeq($(OS), 1)
+else ifeq ($(OS), 1)
 	# Linux
 	EFSW_LINK_LIB = ./lib/linux/libefsw_x86_64.a
-else ifeq($(OS), 2)
+else ifeq ($(OS), 2)
 	# Windows
 	EFSW_LINK_LIB = ./lib/windows/efsw_x86_64.lib
 endif
