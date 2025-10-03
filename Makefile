@@ -1,5 +1,6 @@
 CC = g++
 CCFLAGS = -std=c++14
+INCLUDE_DIR = -Isimwrap/simskt -Iinclude
 
 # OS == 0: Darwin
 # OS == 1: Linux
@@ -10,8 +11,10 @@ OS_NAME := $(shell uname -s)
 
 ifeq ($(OS_NAME), Darwin)
 	OS = 0
+	CC = clang++
 else ifeq ($(OS_NAME), Linux)
 	OS = 1
+	CC = g++
 else ifeq ($(OS_NAME), Windows_NT)
 	OS = 2
 else
@@ -25,7 +28,6 @@ else
 	SIMSKT_LINK_LIB = 
 endif
 
-MAIN_INCLUDE_DIR = -I simwrap/simskt
 
 subm:
 	git submodule init
@@ -38,7 +40,7 @@ simskt: subm build_dir
 	$(CC) $(CCFLAGS) -c simwrap/simskt/simskt.cpp $(SIMSKT_LINK_LIB) -o build/simskt.o
 
 main: simskt
-	$(CC) $(CCFLAGS) main.cpp build/simskt.o $(MAIN_INCLUDE_DIR) -o main
+	$(CC) $(CCFLAGS) main.cpp build/simskt.o $(INCLUDE_DIR) -o main
 
 clean:
 	rm -rf build
