@@ -57,10 +57,10 @@ build_dir:
 	mkdir -p build
 
 simskt: subm build_dir
-	$(CC) $(CCFLAGS) -c simwrap/simskt/simskt.cpp $(SIMSKT_LINK_LIB) -o build/simskt.o
+	$(CC) $(CCFLAGS) -c simwrap/simskt/simskt.cpp -o build/simskt.o
 
 main: simskt
-	$(CC) $(CCFLAGS) main.cpp build/simskt.o $(EFSW_LINK_LIB) $(INCLUDE_DIR) -o main
+	$(CC) $(CCFLAGS) main.cpp build/simskt.o $(ALL_LINK_LIB) $(INCLUDE_DIR) -o main
 
 clean:
 	rm -rf build
