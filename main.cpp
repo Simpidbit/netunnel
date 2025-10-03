@@ -1,4 +1,5 @@
-#include "simskt.h"
+#include "simskt/simskt.h"
+#include "simopt/simopt.h"
 
 #include <efsw/FileSystem.hpp>
 #include <efsw/System.hpp>
@@ -69,6 +70,7 @@ int main( int argc, char** argv ) {
 	signal( SIGTERM, sigend );
 
   SP::Server s;
+  SP::cmdopt_t co(argc, argv);
 
 	std::cout << "Press ^C to exit demo" << std::endl;
 
