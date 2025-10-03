@@ -17,8 +17,10 @@ else ifeq ($(OS_NAME), Linux)
 	CC = g++
 else ifeq ($(OS_NAME), Windows_NT)
 	OS = 2
+	CC = g++
 else
 	OS = 3
+	CC = g++
 endif
 
 # 在Windows下编译simskt需要链接: -lws2_32
