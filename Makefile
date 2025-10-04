@@ -2,6 +2,9 @@ CC = # 随后配置
 CCFLAGS = -std=c++17
 INCLUDE_DIR = -I simwrap -I include
 
+# SOURCES 配置
+SOURCES = main.cpp bind.cpp
+
 # OS == 0: Darwin
 # OS == 1: Linux
 # OS == 2: Windows
@@ -50,8 +53,6 @@ endif
 # ALL_LINK_LIB 配置
 ALL_LINK_LIB = $(SIMSKT_LINK_LIB) $(EFSW_LINK_LIB)
 
-# SOURCES 配置
-SOURCES = main.cpp
 
 subm:
 	git submodule init
@@ -60,10 +61,10 @@ subm:
 build_dir:
 	mkdir -p build
 
-simskt: subm build_dir
+simskt: build_dir
 	$(CC) $(CCFLAGS) -c simwrap/simskt/simskt.cpp -o build/simskt.o
 
-simopt: subm build_dir
+simopt: build_dir
 	$(CC) $(CCFLAGS) -c simwrap/simopt/simopt.cpp -o build/simopt.o
 
 main: simskt simopt

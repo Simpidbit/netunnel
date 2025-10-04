@@ -1,5 +1,8 @@
-#include "simskt/simskt.h"
-#include "simopt/simopt.h"
+#include "bind.h"
+
+#include <simskt/simskt.h>
+#include <simopt/simopt.h>
+#include <json.hpp>
 
 #include <efsw/FileSystem.hpp>
 #include <efsw/System.hpp>
@@ -65,78 +68,41 @@ efsw::WatchID handleWatchID( efsw::WatchID watchid ) {
 }
 
 int main( int argc, char** argv ) {
+  SP::cmdopt_t cmdopt(argc, argv);
 	signal( SIGABRT, sigend );
 	signal( SIGINT, sigend );
 	signal( SIGTERM, sigend );
 
-  SP::Server s;
-  SP::cmdopt_t co(argc, argv);
+  netunnel::bind_conf_t bc;
 
 	std::cout << "Press ^C to exit demo" << std::endl;
 
-	bool commonTest = true;
 	bool useGeneric = false;
 	std::string path;
-
-	if ( argc >= 2 ) {
-		path = std::string( argv[1] );
-
-		if ( efsw::FileSystem::isDirectory( path ) ) {
-			commonTest = false;
-		}
-
-		if ( argc >= 3 ) {
-			if ( std::string( argv[2] ) == "true" ) {
-				useGeneric = true;
-			}
-		}
-	}
 
 	UpdateListener* ul = new UpdateListener();
 
 	/// create the file watcher object
-	efsw::FileWatcher fileWatcher( useGeneric );
+	efsw::FileWatcher fileWatcher( false );
 
-	fileWatcher.followSymlinks( false );
-	fileWatcher.allowOutOfScopeLinks( false );
+  std::string CurPath( efsw::System::getProcessPath() );
 
-	if ( commonTest ) {
-		std::string CurPath( efsw::System::getProcessPath() );
+  std::cout << "CurPath: " << CurPath.c_str() << std::endl;
 
-		std::cout << "CurPath: " << CurPath.c_str() << std::endl;
+  /// starts watching
+  fileWatcher.watch();
 
-		/// starts watching
-		fileWatcher.watch();
+  /// add a watch to the system
+  handleWatchID( fileWatcher.addWatch( CurPath + "test3", ul, true ) );
 
-		/// add a watch to the system
-		handleWatchID( fileWatcher.addWatch( CurPath + "test3", ul, true ) );
+  /// adds another watch after started watching...
+  //efsw::System::sleep( 100 );
 
-		/// adds another watch after started watching...
-		efsw::System::sleep( 100 );
+  efsw::WatchID watchID =
+    handleWatchID( fileWatcher.addWatch( CurPath + "test2", ul, true ) );
 
-		efsw::WatchID watchID =
-			handleWatchID( fileWatcher.addWatch( CurPath + "test2", ul, true ) );
-
-		/// delete the watch
-		if ( watchID > 0 ) {
-      std::cout << "Remove Watch" << std::endl;
-			efsw::System::sleep( 1000 );
-			fileWatcher.removeWatch( watchID );
-		}
-	} else {
-		if ( fileWatcher.addWatch( path, ul, true ) > 0 ) {
-			fileWatcher.watch();
-
-			std::cout << "Watching directory: " << path.c_str() << std::endl;
-
-			if ( useGeneric ) {
-				std::cout << "Using generic backend watcher" << std::endl;
-			}
-		} else {
-			std::cout << "Error trying to watch directory: " << path.c_str() << std::endl;
-			std::cout << efsw::Errors::Log::getLastErrorLog().c_str() << std::endl;
-		}
-	}
+  /// delete the watch
+  //fileWatcher.removeWatch( watchID );
 
 	while ( !STOP ) {
 		efsw::System::sleep( 100 );
